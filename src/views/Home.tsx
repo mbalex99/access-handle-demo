@@ -3,16 +3,15 @@ import Header from "../components/Header";
 import greenlet from "greenlet";
 import { PrimaryButton, SecondaryButton } from "../components/Buttons";
 
-
 const Home = () => {
-  const [logs, setLogs] = useState<any[]>([]);
+  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const [textAreaText, setTextAreaText] = useState<string>("");
   // for reading
   const [textFromReadingFile, setTextFromReadingFile] = useState<string>("");
 
   async function saveText() {
-    const saveBackground = greenlet(async (text: string) => {
+    const saveBackgroundSafari = greenlet(async (text: string) => {
       // @ts-ignore
       const root = await navigator.storage.getDirectory();
       // Create a new file handle.
@@ -21,16 +20,31 @@ const Home = () => {
       });
       const accessHandle = await fileHandle.createSyncAccessHandle();
       const encoder = new TextEncoder();
-      const writeBuffer = encoder.encode(text)
-      accessHandle.write(writeBuffer, { "at" : 0 })
+      const writeBuffer = encoder.encode(text);
+      accessHandle.write(writeBuffer, { at: 0 });
       await accessHandle.close();
     });
-    await saveBackground(textAreaText);
-    console.log('saved')
+
+    if (isSafari) {
+      await saveBackgroundSafari(textAreaText);
+    } else {
+      // @ts-ignore
+      const root = await navigator.storage.getDirectory();
+      // Create a new file handle.
+      const fileHandle = await root.getFileHandle("foo.txt", {
+        create: true,
+      });
+      
+      const writable = await fileHandle.createWritable();
+      const encoder = new TextEncoder();
+      const writeBuffer = encoder.encode(textAreaText);
+      await writable.write(writeBuffer);
+      await writable.close();
+    }
   }
 
   async function getTextFromFile() {
-    const readFromBackground = greenlet(async () => {
+    const readFromBackgroundSafari = greenlet(async () => {
       // @ts-ignore
       const root = await navigator.storage.getDirectory();
       // Create a new file handle.
@@ -39,18 +53,31 @@ const Home = () => {
       });
       const accessHandle = await fileHandle.createSyncAccessHandle();
       const fileSize = await accessHandle.getSize();
-    
+
       const readBuffer = new ArrayBuffer(fileSize);
-      accessHandle.read(readBuffer, { "at": 0 });
+      accessHandle.read(readBuffer, { at: 0 });
       const decoder = new TextDecoder();
       const view = new Uint8Array(readBuffer);
       const text = decoder.decode(view);
-      console.log(`text read from disk`, text)
+      console.log(`text read from disk`, text);
       await accessHandle.close();
-      return text
+      return text;
     });
-    const text = await readFromBackground()
-    setTextFromReadingFile(text)
+
+    if (isSafari) {
+      const text = await readFromBackgroundSafari();
+      setTextFromReadingFile(text);
+    } else {
+      // @ts-ignore
+      const root = await navigator.storage.getDirectory();
+      // Create a new file handle.
+      const fileHandle = await root.getFileHandle("foo.txt", {
+        create: true,
+      });
+      const file = await fileHandle.getFile()
+      const text = await file.text()
+      setTextFromReadingFile(text);
+    }
   }
 
   useEffect(() => {
