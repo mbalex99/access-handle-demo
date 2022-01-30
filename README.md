@@ -1,40 +1,7 @@
-# Vite + React + Tailwind CSS starter
+# Access Handle API Example
 
-Inspired by [posva's](https://github.com/posva) [vite-tailwind-starter](https://github.com/posva/vite-tailwind-starter)
+A sample implementation showing off: https://github.com/WICG/file-system-access/blob/main/AccessHandle.md
 
-Note if you have access to [Tailwind UI](https://tailwindui.com), you can follow the following steps to add it:
+* Works on iOS 15.2 and higher (Safari 15.2 on Mac)
+* Works on Chrome 97 and higher 
 
-1. Install `@tailwindcss/ui`:
-
-```sh
-yarn add @tailwindcss/ui
-```
-
-2. Add the plugin in `tailwind.config.js` without changing anything else:
-
-```js
-// tailwind.config.js
-module.exports = {
-  // ...
-  // rest of the config
-  plugins: [require('@tailwindcss/ui')],
-}
-```
-
-## Installation
-
-```sh
-yarn
-```
-
-## Development
-
-```sh
-yarn dev
-```
-
-## Build
-
-```sh
-yarn build
-```
