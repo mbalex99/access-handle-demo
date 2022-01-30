@@ -4,14 +4,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.3.1
     - name: Build dist
       uses: actions/setup-node@v2
       with:
         node-version: '16'
     - run: |
-        npm install
-        npm run build
+          yarn
+          yarn build
         
     - name: Deploy 🚀
       uses: peaceiris/actions-gh-pages@v3
