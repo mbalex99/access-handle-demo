@@ -1,10 +1,5 @@
 name: Deploy to GitHub pages
-on:
-  push:
-    # this is the branch where you develop your site
-    # as discussed in the publishing sources section
-    # this can change if you are using an user/organization repo
-    branches: [ main ]
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
