@@ -16,7 +16,7 @@ const Home = () => {
       // @ts-ignore
       const root = await navigator.storage.getDirectory();
       // Create a new file handle.
-      const fileHandle = await root.getFileHandle("Untitled.txt", {
+      const fileHandle = await root.getFileHandle("foo.txt", {
         create: true,
       });
       const accessHandle = await fileHandle.createSyncAccessHandle();
@@ -34,11 +34,12 @@ const Home = () => {
       // @ts-ignore
       const root = await navigator.storage.getDirectory();
       // Create a new file handle.
-      const fileHandle = await root.getFileHandle("Untitled.txt", {
+      const fileHandle = await root.getFileHandle("foo.txt", {
         create: true,
       });
       const accessHandle = await fileHandle.createSyncAccessHandle();
       const fileSize = await accessHandle.getSize();
+    
       const readBuffer = new ArrayBuffer(fileSize);
       accessHandle.read(readBuffer, { "at": 0 });
       const decoder = new TextDecoder();
